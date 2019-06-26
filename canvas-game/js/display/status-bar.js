@@ -1,20 +1,27 @@
 // bottom of the game -- status bar
-function StatusBar() {
+function StatusBar(container, { setRunningState, getRunningState }) {
+  console.debug(container);
+
+  const startPauseButton = container.querySelector('#start-pause-button');
+
+  startPauseButton.onclick = (event) => {
+    const isRunning = getRunningState();
+    const buttonText = !isRunning ? 'Pause' : 'Start';
+    startPauseButton.innerText = buttonText;
+    setRunningState(!isRunning);
+  };
+
+  // Set initial button text
+  startPauseButton.innerText = 'Start';
 
   return {
     setMaze: setMaze,
-    setPosition: setPosition,
-    setMoveCount: setMoveCount
+    setPosition: setPosition
   }
 
   function setMaze(maze) {
     document.getElementById('current-maze').innerText = maze.name;
-    setMoveCount(0);
     setPosition(maze.startingPosition);
-  }
-
-  function setMoveCount(c) {
-    document.getElementById('move-count').innerText = c;
   }
 
   function setPosition(position) {

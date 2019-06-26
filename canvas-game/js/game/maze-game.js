@@ -14,6 +14,9 @@ function GameOfLifeManager(
   var onSolution;
   var currentPosition = null;
   var moves = [];
+  let updateInterval = 100; // milliseconds
+  let isRunning = false;
+  let renderTimeoutHander = null;
 
   // Maps between display positions and map positions
   var coordinates = Coordinates();
@@ -37,7 +40,18 @@ function GameOfLifeManager(
   );
 
   // The status bar at the bottom of the screen
-  var statusBar = StatusBar(statusBarContainer, coordinates);
+  var statusBar = StatusBar(statusBarContainer, {
+    setRunningState: (value) => {
+      isRunning = value;
+      if (isRunning) {
+        renderFrame();
+        return;
+      }
+      clearTimeout(renderTimeoutHander);
+      renderTimeoutHander = null;
+    },
+    getRunningState: () => isRunning
+  });
 
   return {
     // start a new maze
@@ -51,7 +65,6 @@ function GameOfLifeManager(
     moves = [];
     setMaze(maze);
     onSolution = onSolution_;
-    renderFrame();
   }
 
   // the render loop.
@@ -59,15 +72,64 @@ function GameOfLifeManager(
     if (currentMaze) {
       // time is used for periodic animations
       var time = Date.now();
-
-      // There are three stacked canvases:
-      // the map, the avatar path, and the overlay with the avatar and goal.
-      // Only the overlay is animated, so it is updated here
       renderer.updateOverlay(currentPosition, moves[moves.length - 1], currentMaze.endingPosition, time);
     }
 
+    /* Run one Game of Life step. */
+    currentMaze = runLifeStep(currentMaze);
+    setMaze(currentMaze);
+
     // do it again
-    requestAnimationFrame(renderFrame);
+    renderTimeoutHander = setTimeout(renderFrame, updateInterval);
+  }
+
+  function runLifeStep(grid) {
+    // console.debug(grid);
+    const nextGrid = grid.map.map((row, rowIndex) => {
+      return row.map((cell, columnIndex) => {
+        const liveNeighborCount = countLiveNeighbors(rowIndex, columnIndex, grid.map);
+        if (isAlive(cell)) {
+          if (liveNeighborCount < 2) {
+            return ' ';
+          }
+          if (liveNeighborCount <= 3) {
+            return 'X';
+          }
+          return ' ';
+        }
+        if (liveNeighborCount === 3) {
+          return 'X';
+        }
+        return ' ';
+      })
+    });
+
+    return {...grid, map: nextGrid};
+  }
+
+  function countLiveNeighbors(row, col, gridArray) {
+    // neighbors from top-left
+    // TODO: look up how to handle edge cells
+    const neighbors = [];
+    if (row - 1 >= 0) {
+      (col - 1 >= 0) ? neighbors.push(gridArray[row - 1][col - 1]) : null;
+      neighbors.push(gridArray[row - 1][col]);
+      (col + 1 < gridArray.length) ? neighbors.push(gridArray[row - 1][col + 1]) : null;
+    }
+    (col - 1 >= 0) ? neighbors.push(gridArray[row][col - 1]) : null;
+    (col + 1 < gridArray.length) ? neighbors.push(gridArray[row][col + 1]) : null;
+    if (row + 1 < gridArray.length) {
+      (col - 1 >= 0) ? neighbors.push(gridArray[row + 1][col - 1]) : null;
+      gridArray[row + 1][col];
+      (col + 1 < gridArray.length) ? neighbors.push(gridArray[row + 1][col + 1]) : null;
+    }
+    return neighbors.reduce((count, neighbor) => {
+      return count + (isAlive(neighbor) ? 1 : 0);
+    }, 0);
+  }
+
+  function isAlive(cell) {
+    return cell.trim().length > 0;
   }
 
   // Configure the gmae with a new maze

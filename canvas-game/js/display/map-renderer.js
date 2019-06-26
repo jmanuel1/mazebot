@@ -15,7 +15,7 @@ var GridRenderer = function (
   coordinates
 ) {
   let grid;
-  const liveCellElements = [];
+  let liveCellElements = [];
 
   return {
     setGrid: setGrid,
@@ -30,6 +30,14 @@ var GridRenderer = function (
 
   function render() {
     // rendering is inspired by https://www.freecodecamp.org/news/create-gameoflife-with-react-in-one-hour-8e686a410174/
+
+    // remove old cells
+    liveCellElements.forEach(cellElement => {
+      cellElement.parentNode.removeChild(cellElement);
+    });
+    // make sure to clear the array
+    liveCellElements = [];
+
     grid.forEach((row, rowIndex) => {
       row.forEach((cell, columnIndex) => {
         const cellOffest = gridContext.getCellOffset(rowIndex, columnIndex);
@@ -41,6 +49,7 @@ var GridRenderer = function (
         cellElement.style.top = cellOffest.y + 'px';
         cellElement.classList.add('cell');
         gridContext.addToGrid(cellElement);
+        liveCellElements.push(cellElement);
       })
     });
   }
