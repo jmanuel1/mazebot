@@ -130,10 +130,13 @@ button#start, button#next-maze {
 }
 
 #grid {
-  /* TODO: Background grid doesn't scroll with the cells. */
-  background-image:    linear-gradient(#333 1px, transparent 1px),    linear-gradient(90deg, #333 1px, transparent 1px);
+  background-image:
+    linear-gradient(#333 1px, transparent 1px),
+    linear-gradient(90deg, #333 1px, transparent 1px);
   background-size: var(--grid-cell-size) var(--grid-cell-size);
-  height: 80%;
+  /* Background grid scrolls with the cells. */
+  background-attachment: local;
+  height: 100%;
   width: 100%;
   overflow: auto;
   position: absolute;
