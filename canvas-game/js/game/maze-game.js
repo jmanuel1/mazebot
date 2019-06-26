@@ -109,7 +109,9 @@ function GameOfLifeManager(
 
   function countLiveNeighbors(row, col, gridArray) {
     // neighbors from top-left
-    // TODO: look up how to handle edge cells
+    // Note this function effectively treats cells beyond the size of the
+    // original maze as dead
+
     const neighbors = [];
     if (row - 1 >= 0) {
       (col - 1 >= 0) ? neighbors.push(gridArray[row - 1][col - 1]) : null;
