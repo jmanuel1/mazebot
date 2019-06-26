@@ -1,3 +1,10 @@
+/* Variables */
+
+:root {
+  --grid-cell-size: 20px;
+  --status-bar-height: 30px;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 18px;
@@ -33,6 +40,7 @@ button#start, button#next-maze {
   bottom: 0;
   left: 0;
   display: none;
+  overflow: scroll;
 }
 
 #get-started, #results, #error {
@@ -55,6 +63,7 @@ button#start, button#next-maze {
 
 .phase-playing #game {
   display: block;
+  background-color: #000;
 }
 
 .phase-error #error {
@@ -79,10 +88,10 @@ button#start, button#next-maze {
 
 #status-bar {
   padding: 5px 10px 10px;
-  z-index: 4;
+  /* z-index: 4; */
   display: fixed;
-  height: 30px;
-  bottom: 0;
+  height: var(--status-bar-height);
+  /* bottom: 0; */
   width: 100%;
 
   background:white;
@@ -102,4 +111,39 @@ button#start, button#next-maze {
 
 .status-value {
   text-align: center;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+#grid-container {
+  height: calc(100% - var(--status-bar-height));
+}
+
+#grid {
+  /* TODO: Background grid doesn't scroll with the cells. */
+  background-image:    linear-gradient(#333 1px, transparent 1px),    linear-gradient(90deg, #333 1px, transparent 1px);
+  background-size: var(--grid-cell-size) var(--grid-cell-size);
+  height: 80%;
+  width: 100%;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cell {
+  background: #ccc;
+  position: absolute;
+  width: var(--grid-cell-size);
+  height: var(--grid-cell-size);
 }

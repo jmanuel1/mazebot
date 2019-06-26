@@ -1,7 +1,7 @@
 //
 // The top-level game manager
 //
-function MazeGame(
+function GameOfLifeManager(
   mapCanvas,
   avatarPathCanvas,
   overlayCanvas,
@@ -84,7 +84,7 @@ function MazeGame(
     coordinates.zoom(maze.startingPosition)
 
     // set the map in the renderer, which will kick off map rendering etc.
-    renderer.setMap(maze.map);
+    renderer.setGrid(maze.map);
     statusBar.setMaze(maze);
 
     // turn input on. We ignore input when there is no game active.

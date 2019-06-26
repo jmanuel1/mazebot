@@ -16,8 +16,8 @@ window.onload = function() {
   statusBarContainer = document.getElementById('status-bar');
 
   // see game/maze-game.js
-  game = MazeGame(
-    document.getElementById('map'),
+  game = GameOfLifeManager(
+    document.getElementById('grid'),
     document.getElementById('avatar-path'),
     document.getElementById('overlay'),
     statusBarContainer,

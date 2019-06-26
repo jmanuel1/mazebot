@@ -1,76 +1,44 @@
+class GridContext {
+  constructor(gridElement) {
+    this._gridRef = gridElement;
+  }
+
+  getCellOffset(rowIndex, columnIndex) {
+    const gridOffset = this.getGridOffset();
+    const cellSize = this.getCellSize();
+
+    return {
+      x: gridOffset.x + columnIndex*cellSize,
+      y: gridOffset.y + rowIndex*cellSize
+    };
+  }
+
+  getGridOffset() {
+    const rect = this._gridRef.getBoundingClientRect();
+    const doc = document.documentElement;
+    return {x: (rect.left + window.pageXOffset) - doc.clientLeft,      y: (rect.top + window.pageYOffset) - doc.clientTop}
+  }
+
+  addToGrid(element) {
+    this._gridRef.appendChild(element);
+  }
+
+  getCellSize() {
+    // TODO: get this value from the CSS variable
+    return 20;
+  }
+}
+
 // Top-level renderer
 // Sets up the renderers for each layer
 var Renderer = function (
   coordinates,
-  mapCanvas,
+  gridElement,
   avatarPathCanvas,
   overlayCanvas
 ) {
+  gridContext = new GridContext(gridElement);
+  gridRenderer = GridRenderer(gridContext);
 
-  // There are 3 layers, listed here from bottom to top.
-  // Each layer is sized to the entire viewport size
-
-  // The map: floor and walls
-  // Only updated when a maze starts or the viewport changes
-  // (scroll, or zoom)
-  var mapContext = mapCanvas.getContext('2d', {alpha: false});
-
-  var mapRenderer = MapRenderer(
-    mapContext,
-    coordinates
-  );
-
-  // Avatar path: transparent and only updated when the path changes
-  // or the viewport changes
-  var avatarPathContext = avatarPathCanvas.getContext('2d');
-
-  var avatarPathRenderer = AvatarPathRenderer(
-    avatarPathContext,
-    coordinates
-  );
-
-
-  // Overlay with the avatar and goal
-  // This is continuously animated content, and is updated every frame
-  var overlayContext = overlayCanvas.getContext('2d');
-  var overlayRenderer = OverlayRenderer(
-    overlayContext,
-    coordinates
-  );
-
-  // New map: configure all the renderers
-  function setMap(map) {
-    CanvasUtils.resetCanvas(mapContext);
-    mapRenderer.setMap(map);
-    avatarPathRenderer.clearAvatarPath();
-    displaySizeChanged();
-  }
-
-  // Resize all the canvases to the new size and tell the renderers to do their thing
-  function displaySizeChanged() {
-    var displaySize = coordinates.displaySize();
-
-    mapCanvas.width = displaySize.width;
-    mapCanvas.height = displaySize.height;
-
-    avatarPathCanvas.width = displaySize.width;
-    avatarPathCanvas.height = displaySize.height;
-
-    overlayCanvas.width = displaySize.width;
-    overlayCanvas.height = displaySize.height;
-
-    // overlay is updated continuously so doesn't need to be here
-    mapRenderer.render();
-    avatarPathRenderer.redraw();
-  }
-
-  return {
-    // called when a maze starts
-    setMap: setMap,
-    // called in render loop
-    updateOverlay: overlayRenderer.updateOverlay,
-    displaySizeChanged: displaySizeChanged,
-    // player moved
-    addToAvatarPath: avatarPathRenderer.addToAvatarPath
-  };
+  return { setGrid: (grid) => gridRenderer.setGrid(grid), updateOverlay: () => null, displaySizeChanged: () => null }
 }
