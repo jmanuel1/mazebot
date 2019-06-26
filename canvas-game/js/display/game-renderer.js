@@ -24,8 +24,10 @@ class GridContext {
   }
 
   getCellSize() {
-    // TODO: get this value from the CSS variable
-    return 20;
+    // get this value from the CSS variable
+    const rootStyles = getComputedStyle(document.documentElement);
+    const size = rootStyles.getPropertyValue('--grid-cell-size');
+    return parseInt(size, 10);
   }
 }
 
