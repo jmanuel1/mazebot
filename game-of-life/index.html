@@ -7,22 +7,17 @@
 
     <!-- utilities in js/utils-->
     <script type="text/javascript" src="js/utils/polyfills.js"></script>
-    <script type="text/javascript" src="js/utils/pathfinder.js"></script>
     <script type="text/javascript" src="js/utils/api-client.js"></script>
-    <script type="text/javascript" src="js/utils/coordinates.js"></script>
 
     <!-- rendering the game happens in js/display -->
     <script type="text/javascript" src="js/display/styles.js"></script>
     <script type="text/javascript" src="js/display/game-renderer.js"></script>
-    <script type="text/javascript" src="js/display/overlay-renderer.js"></script>
-    <script type="text/javascript" src="js/display/avatar-path-renderer.js"></script>
     <script type="text/javascript" src="js/display/map-renderer.js"></script>
-    <script type="text/javascript" src="js/display/canvas-utils.js"></script>
     <script type="text/javascript" src="js/display/status-bar.js"></script>
 
     <!-- input handling and game logic is in js/game/ -->
-    <script type="text/javascript" src="js/game/maze-input.js"></script>
-    <script type="text/javascript" src="js/game/maze-game.js"></script>
+    <script type="text/javascript" src="js/game/game-of-life-state.js"></script>
+    <script type="text/javascript" src="js/game/game-of-life.js"></script>
 
     <!-- The top-level script -->
     <script type="text/javascript" src="js/index.js"></script>
@@ -40,21 +35,11 @@
     <div id='maze-browser' class='phase-starting'>
 
       <div id='get-started'>
-        <h1>Welcome to Mazebot</h1>
+        <h1>Welcome to Mazebot Game of Life</h1>
         <img src='mazebot.png' class='mazebot-image'/>
-        <p>Use your arrow keys, mouse, or touch to navigate the maze</p>
-        <p>Press + or double click to zoom in or out</p>
+        <p>Use the start button to start Conway's Game of Life</p>
         <div>
           <button id='start'>Maze Me!</button>
-        </div>
-      </div>
-
-      <div id='results'>
-        <h1>RESULTS</h1>
-        <img src='mazebot.png' class='mazebot-image'/>
-        <p id="results-message"></p>
-        <div>
-          <button id='next-maze'>Maze Me Again!</button>
         </div>
       </div>
 

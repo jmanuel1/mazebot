@@ -1,6 +1,7 @@
 class GridContext {
   constructor(gridElement) {
     this._gridRef = gridElement;
+    this._liveCellRefs = [];
   }
 
   getCellOffset(rowIndex, columnIndex) {
@@ -21,6 +22,7 @@ class GridContext {
 
   addToGrid(element) {
     this._gridRef.appendChild(element);
+    this._liveCellRefs.push(element);
   }
 
   getCellSize() {
@@ -28,6 +30,13 @@ class GridContext {
     const rootStyles = getComputedStyle(document.documentElement);
     const size = rootStyles.getPropertyValue('--grid-cell-size');
     return parseInt(size, 10);
+  }
+
+  removeOldLiveCells() {
+    this._liveCellRefs.forEach(cellElement => {
+      this._gridRef.removeChild(cellElement);
+    });
+    this._liveCellRefs = [];
   }
 }
 

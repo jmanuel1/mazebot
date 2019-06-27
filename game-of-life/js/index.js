@@ -64,7 +64,6 @@ function setPhase(phase) {
 }
 
 function handleResize() {
-  game.setDisplaySize(window.innerWidth, window.innerHeight - statusBarContainer.clientHeight);
 }
 
 // when a maze is solved, show the results div and await a click to continue

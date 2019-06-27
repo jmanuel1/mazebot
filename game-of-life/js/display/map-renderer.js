@@ -1,21 +1,8 @@
-//
-class Grid extends Array {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
-    // create rows
-    for (let i = 0; i < height; i++) {
-      this[i] = new Array(width);
-    }
-  }
-}
-
+// Background grid and live cell renderer
 var GridRenderer = function (
-  gridContext,
-  coordinates
+  gridContext
 ) {
   let grid;
-  let liveCellElements = [];
 
   return {
     setGrid: setGrid,
@@ -32,11 +19,7 @@ var GridRenderer = function (
     // rendering is inspired by https://www.freecodecamp.org/news/create-gameoflife-with-react-in-one-hour-8e686a410174/
 
     // remove old cells
-    liveCellElements.forEach(cellElement => {
-      cellElement.parentNode.removeChild(cellElement);
-    });
-    // make sure to clear the array
-    liveCellElements = [];
+    gridContext.removeOldLiveCells();
 
     grid.forEach((row, rowIndex) => {
       row.forEach((cell, columnIndex) => {
@@ -49,7 +32,6 @@ var GridRenderer = function (
         cellElement.style.top = cellOffest.y + 'px';
         cellElement.classList.add('cell');
         gridContext.addToGrid(cellElement);
-        liveCellElements.push(cellElement);
       })
     });
   }
